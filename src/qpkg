@@ -2,7 +2,7 @@
 
 PKGDIR="${FPKG_ROOT}/pkg"
 
-while [! -z "$1" ]; do 
+while [ ! -z "$1" ]; do 
 	version=$(find $PKGDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)
 
 	if [ "$version" = "" ]
@@ -14,3 +14,5 @@ while [! -z "$1" ]; do
     		version=${version%.tar.zst}
     		echo $version
 	fi
+shift
+done

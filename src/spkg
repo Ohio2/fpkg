@@ -1,0 +1,9 @@
+#!/bin/bash
+
+REPO="https://raw.githubusercontent.com/Ohio2/frepo/master"
+PKGDIR="${FPKG_ROOT}/pkg"
+
+
+while [ ! -z "$1" ]; do
+	curl -fLO "$REPO/$1" $PKGDIR
+done
