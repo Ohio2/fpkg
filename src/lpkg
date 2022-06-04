@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PKGDIR="${FPKG_ROOT}/pkg"
+
+while [ ! -z "$1" ]; do
+	pkg_version=$(qpkg "$1")
+	if [ $? -ne 0 ]
+	then
+    		echo $pkg_version
+    	exit 1
+	fi
+
+	zstd -qcd "$PKGDIR/$1-$pkg_version.tar.zst" | tar tf -
+shift
+done

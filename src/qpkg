@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PKGDIR="${FPKG_ROOT}/pkg"
+
+while [! -z "$1" ]; do 
+	version=$(find $PKGDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)
+
+	if [ "$version" = "" ]
+	then
+    		echo "Package not found"
+    		exit 1
+	else
+    		version=${version##*-}
+    		version=${version%.tar.zst}
+    		echo $version
+	fi

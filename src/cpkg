@@ -1,0 +1,47 @@
+#!/bin/bash
+
+cleanup() {
+    if [ $INFAKEROOT -eq 1 ]
+    then
+        return
+    fi
+    rm -rf $PKGDIR
+}
+
+trap cleanup EXIT
+
+INFAKEROOT=0
+
+if [ "$1" = "-F" ]
+then
+    INFAKEROOT=1
+    shift
+    PKGDIR="$1"
+    shift
+fi
+
+if [ $# -eq 0 ]
+then
+    echo "No arguments supplied"
+    exit 1
+fi
+
+if [ $INFAKEROOT -eq 0 ]
+then
+    if [ $EUID -eq 0 ]
+    then
+        echo "Refusing to create package as root." \
+            "Please use another user for this."
+        exit 1
+    fi
+    PKGDIR=$(mktemp -d)
+    fakeroot -- $0 -F "$PKGDIR" "$@" || exit $?
+else
+    env DESTDIR=$PKGDIR "$@"
+    PKGNAME=$(basename $(pwd))
+
+    PKGDEST="${FPKG_ROOT}/pkg"
+
+    cd $PKGDIR
+    ls $PKGDIR | tar -c --files-from -  | zstd -3 > "$PKGDEST/$PKGNAME.tar.zst"
+fi
