@@ -1,0 +1,15 @@
+#!/bin/bash
+FPKG_ROOT="/var/tmp"
+while [ ! -z "$1" ]; do
+	case $1 in
+		i|install) ipkg "$2" ;;
+		u|update) upkg "$2" ;;
+		l) lpkg "$2" ;;
+		q|query) qpkg "$2" ;;
+		r|remove) rpkg "$2" ;;
+		s|spkg) spkg "$2" ;;
+		c|src|compile|make|source) cpkg "$2" ;;
+
+	esac
+shift
+done

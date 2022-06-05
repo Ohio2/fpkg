@@ -2,8 +2,18 @@
 
 REPO="https://raw.githubusercontent.com/Ohio2/frepo/master"
 PKGDIR="${FPKG_ROOT}/pkg"
+GITDIR="${FPKG_ROOT}/git"
+if [ ! -d $GITDIR ]; then
+	git clone $REPO
+fi
+
+src=$(find $GITDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)
+
 
 
 while [ ! -z "$1" ]; do
-	curl -fLO "$REPO/$1" $PKGDIR
+	case $1 in
+		--query) cp "$GITDIR/$src" $PKGDIR ; qpkg "$1" ;;
+		*) cp "$GITDIR/$src" $PKGDIR ;;
+	esac
 done

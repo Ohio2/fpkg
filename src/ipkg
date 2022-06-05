@@ -3,15 +3,16 @@
 PKGDIR="${FPKG_ROOT}/pkg"
 DESTDIR="${FPKG_ROOT}/"
 
-pkg_version=$(qpkg "$1")
 while [ ! -z "$1" ]; do
+	spkg "$1"
+	pkg_version=$(qpkg "$1")
 	if [ $? -ne 0 ]
 	then
     		echo $pkg_version
     		exit 1
 	fi
 
-cd "$DESTDIR"
-zstd -qcd "$PKGDIR/$1-$pkg_version.tar.zst" | tar vxf - --same-owner
+	cd "$DESTDIR"
+	zstd -qcd "$PKGDIR/$1-$pkg_version.tar.zst" | tar vxf - --same-owner
 shift
 done

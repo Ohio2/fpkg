@@ -17,3 +17,5 @@ install:
 	install -m 755 src/lpkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/ipkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/rpkg $(DESTDIR)$(BINDIR)
+	install -m 755 src/spkg $(DESTDIR)$(BINDIR)
+	install -m 755 src/upkg $(DESTDIR)$(BINDIR)

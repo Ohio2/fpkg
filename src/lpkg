@@ -3,6 +3,7 @@
 PKGDIR="${FPKG_ROOT}/pkg"
 
 while [ ! -z "$1" ]; do
+	spkg "$1"
 	pkg_version=$(qpkg "$1")
 	if [ $? -ne 0 ]
 	then
