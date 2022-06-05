@@ -3,8 +3,7 @@
 PKGDIR="${FPKG_ROOT}/pkg"
 DESTDIR="${FPKG_ROOT}/"
 
-while [ ! -z "$1" ]; do
-	spkg "$1"
+while [ ! -z "$1" ]; do	
 	pkg_version=$(qpkg "$1")
 	if [ $? -ne 0 ]
 	then
