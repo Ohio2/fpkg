@@ -3,7 +3,9 @@
 REPO="https://github.com/Ohio2/frepo"
 PKGDIR="${FPKG_ROOT}/pkg"
 GITDIR="${FPKG_ROOT}/git"
-mkdir -p ${PKGDIR}
+if [ "$#" -eq 0 ]; then
+	echo "No arguments supplied."
+fi
 if [ ! -d $GITDIR ]; then
 	git clone $REPO $GITDIR
 fi

@@ -19,3 +19,4 @@ install:
 	install -m 755 src/rpkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/spkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/upkg $(DESTDIR)$(BINDIR)
+	install -m 755 src/fpkg $(DESTDIR)$(BINDIR)
