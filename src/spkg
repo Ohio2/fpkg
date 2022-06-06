@@ -9,15 +9,18 @@ fi
 if [ ! -d $GITDIR ]; then
 	git clone $REPO $GITDIR
 fi
-
+git pull $GITDIR
 while [ ! -z "$1" ]; do
 	find $GITDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1
 
 	src=$(find $GITDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)
 
 		case $1 in
-			--query) cp "$GITDIR/$src" $PKGDIR ; qpkg "$1" ;;
-			*) cp "$GITDIR/$src" $PKGDIR || exit 1 ;;
+			--query) cp "$GITDIR/$src" $PKGDIR ; cp "$GITDIR/$1.d" ; qpkg "$1" ;;
+			*) cp "$GITDIR/$src" $PKGDIR ; 
+				if [ -f "$GITDIR/$1.d" ]; then
+					cp "$GITDIR/$1.d" $PKGDIR
+				fi ;;
 		esac
 shift
 done

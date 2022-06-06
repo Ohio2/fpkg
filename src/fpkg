@@ -5,7 +5,7 @@ lock="/tmp/lock"
 touch $lock
 while [ ! -z "$1" ]; do
 	case $1 in
-		i|install) spkg "$2" ; ipkg "$2" ;;
+		i|install) spkg "$2" ; ipkg "$2" ; ipkg > $2.d ;;
 		u|update) upkg "$2" ;;
 		l) lpkg "$2" ;;
 		q|query) qpkg "$2" ;;

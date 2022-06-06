@@ -37,7 +37,7 @@ then
     PKGDIR=$(mktemp -d)
     fakeroot -- $0 -F "$PKGDIR" "$@" || exit $?
 else
-    env DESTDIR=$PKGDIR "$@"
+    env DESTDIR=$PKGDIR INSTALL_PATH=$PKGDIR "$@"
     PKGNAME=$(basename $(pwd))
 
     PKGDEST="${FPKG_ROOT}/pkg"
