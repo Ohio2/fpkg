@@ -1,20 +1,28 @@
 #!/bin/bash
-PKGDIR="$FPKG_ROOT/var/pkg"
-GITDIR="$FPKG_ROOT/var/fpkg/git"
+_PKGDIR="$FPKG_ROOT/var/pkg"
+_GITDIR="$FPKG_ROOT/var/fpkg/git"
+REPO="https://github.com/Ohio2/frepo.git"
 lock="/tmp/lock"
+if [ -f $lock ]; then
+	echo "Error 5"
+	exit 5
+fi
 touch $lock
-while [ ! -z "$1" ]; do
-	case $1 in
-		i|install) spkg "$2" ; ipkg "$2" ; ipkg > $2.d ;;
-		u|update) upkg "$2" ;;
-		l) lpkg "$2" ;;
-		q|query) qpkg "$2" ;;
-		r|remove) rpkg "$2" ;;
-		s|spkg) spkg "$2" ;;
-		c|src|compile|make|source) cpkg "$2" ;;
-		sq) spkg --query "$2" ;;
+if [ ! -d $_GITDIR ]; then
+	git clone $REPO $_GITDIR
+fi
+if [ ! -d $_PKGDIR ]; then
+	mkdir -pv $_PKGDIR
+fi
+case $1 in
+	i|install) while [ ! -z "$2" ]; do PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2" ; PKGDIR=$_PKGDIR GITDIR=$_GITDIR ipkg "$2" ; PKGDIR=$_PKGDIR GITDIR=$_GITDIR ipkg < $2.d; shift; done ;;
+	u|update) while [ ! -z "$2" ]; do  PKGDIR=$_PKGDIR GITDIR=$_GITDIR upkg "$2"; shift; done ;;
+	l) while [ ! -z "$2" ]; do PKGDIR=$_PKGDIR GITDIR=$_GITDIR lpkg "$2"; shift ;done ;;
+	q|query) while [ ! -z "$2" ]; do PKGDIR=$_PKGDIR GITDIR=$_GITDIR qpkg "$2"; shift; done ;;
+	r|remove) while [ ! -z "$2" ]; do PKGDIR=$_PKGDIR GITDIR=$_GITDIR rpkg "$2";shift; done ;;
+	s|sync) while [ ! -z "$2" ]; do  PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2"; shift; done ;;
+	c|src|compile|make|source) cpkg "$2" "$3" "$4" ;;
+	sq|syncquery) while [ ! -z "$2" ]; do PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg --query "$2" ; shift ; done;;
 
 	esac
-shift
-done
 rm $lock

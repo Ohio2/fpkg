@@ -6,10 +6,10 @@ GITDIR="${FPKG_ROOT}/git"
 if [ "$#" -eq 0 ]; then
 	echo "No arguments supplied."
 fi
-if [ ! -d $GITDIR ]; then
-	git clone $REPO $GITDIR
-fi
-git pull $GITDIR
+pushd
+cd $GITDIR
+git pull
+popd
 while [ ! -z "$1" ]; do
 	find $GITDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1
 
@@ -17,7 +17,7 @@ while [ ! -z "$1" ]; do
 
 		case $1 in
 			--query) cp "$GITDIR/$src" $PKGDIR ; cp "$GITDIR/$1.d" ; qpkg "$1" ;;
-			*) cp "$GITDIR/$src" $PKGDIR ; 
+			*) cp "$GITDIR/$src" $PKGDIR 
 				if [ -f "$GITDIR/$1.d" ]; then
 					cp "$GITDIR/$1.d" $PKGDIR
 				fi ;;
