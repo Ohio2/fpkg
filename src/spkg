@@ -3,14 +3,16 @@
 REPO="https://github.com/Ohio2/frepo"
 PKGDIR="${FPKG_ROOT}/pkg"
 GITDIR="${FPKG_ROOT}/git"
+_fpkgignore="${GITDIR}/.fpkg-ignore"
 if [ "$#" -eq 0 ]; then
 	echo "No arguments supplied."
+	exit 0
 fi
 pushd
-cd $GITDIR
-git pull
-popd
 while [ ! -z "$1" ]; do
+	if grep $1 "$_fpkgignore" 1>/dev/null 2>&1 ; then
+		exit 0
+	fi
 	find $GITDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1
 
 	src=$(find $GITDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)

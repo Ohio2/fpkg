@@ -1,13 +1,14 @@
 # fpkg
 
-This is a linux package manager focussed on simplicity, rather than feature
+Faerbit's original purpose was:
+„This is a linux package manager focused on simplicity, rather than feature
 completeness. This is rather for my personal education, than for producing
-something useful.
+something useful.”
 
 Fork of: https://codeberg.org/faerbit/fpkg/src/branch/master
 
 ## Dependencies
- * fakeroot
+ * fakeroot (only for cpkg)
  * bash
  * zstd
  * tar
@@ -50,3 +51,19 @@ ipkg foo
 ``` bash
 rpkg foo
 ```
+
+**u**pdate **p**ac**k**a**g**e:
+``` bash
+upkg foo 
+```
+
+**s**ync **p**ac**k**a**g**e:
+``` bash
+spkg foo
+```
+
+**f**aerbit's **p**ac**k**a**g**e manager:
+``` bash
+fpkg c/q/l/i/r/u/s foo 
+```
+
