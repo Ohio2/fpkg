@@ -3,7 +3,7 @@ _PKGDIR="$FPKG_ROOT/var/pkg"
 _GITDIR="$FPKG_ROOT/var/fpkg/git"
 REPO="https://github.com/Ohio2/frepo.git"
 _lock="/tmp/lock"
-if [ -f $lock ]; then
+if [ -f $_lock ]; then
 	echo "Error 5"
 	exit 5
 fi
