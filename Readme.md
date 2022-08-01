@@ -57,6 +57,9 @@ rpkg foo
 upkg foo 
 ```
 
+## Repositories
+You have to make your own repository, cpkg is provided to you, since i'm too lazy to actualy maintain a repo.
+
 **s**ync **p**ac**k**a**g**e:
 ``` bash
 spkg foo
@@ -66,4 +69,4 @@ spkg foo
 ``` bash
 fpkg c/q/l/i/r/u/s foo 
 ```
-
+###

@@ -43,5 +43,6 @@ else
     PKGDEST="${FPKG_ROOT}/pkg"
 
     cd $PKGDIR
-    ls $PKGDIR | tar -c --files-from -  | zstd -3 > "$PKGDEST/$PKGNAME.tar.zst"
+    # ls $PKGDIR | tar -c --files-from -  | zstd -3 > "$PKGDEST/$PKGNAME.tar.zst"
+    tar -c --files-from . | zstd -3 > "$PKGDEST/$PKGNAME.tar.zst"
 fi
