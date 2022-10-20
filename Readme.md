@@ -69,4 +69,5 @@ spkg foo
 ``` bash
 fpkg c/q/l/i/r/u/s foo 
 ```
-###
+### Theorotical side of criticalupdated
+Packages with the critical tag will be automatically updated, and DO NOT WORRY! You can disable this.
