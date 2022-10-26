@@ -1,1 +1,7 @@
 REPO="" # Your repo here.
+_PKGDIR=""
+_GITDIR=""
+_GIT_or_HTTPS="" # For reveg sake's i won't change the gitdir var to reflect this var
+_usesha=""
+_mlock=""
+_lock=""

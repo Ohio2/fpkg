@@ -1,7 +1,7 @@
 MIT License
 
-Copyright (c) 2018 Fabian Klemp
-Copyright © 2022 Ohio2
+Copyright © 2018 Fabian Klemp
+Copyright © 2022 Ohio2 (Maksymilian Sęk)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
