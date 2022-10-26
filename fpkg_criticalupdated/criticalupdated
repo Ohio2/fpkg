@@ -1,9 +1,1 @@
-#!/sbin/openrc-run
-extra_commands=""
-depend(){
-	need net
-	provide updctl
-}
-command="@bindir@/fpkg"
-command_args="updated"
-pidfile="/run/${RC_SVCNAME}.pid"
+#!/bin/bash
