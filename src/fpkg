@@ -11,7 +11,7 @@ _mlock=no
 
 . $conf
 if [ -f $_lock && $_mlock = yes ]; then
-	echo "Error 5"
+	echo "Error 5, check if another fpkg PID is running"
 	exit 5
 fi
 touch $_lock
