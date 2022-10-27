@@ -10,20 +10,22 @@ _lock="/tmp/lock"
 _mlock=no
 
 . $conf
-case $_GIT_OR_HTTPS in
-	git|GIT) _sc_init="git" _sc_arg="pull" _init_arg="clone" ;;
-	#https|HTTPS) ;;
-	#*) $_sc
 if [ -f $_lock && $_mlock = yes ]; then
 	echo "Error 5"
 	exit 5
 fi
 touch $_lock
 if [ ! -d $_GITDIR ]; then
-	$_sc_init $_init_arg="clone" $REPO $_GITDIR
+	case $_HTTPS_or_GIT in
+		git) git clone $REPO $_GITDIR ;;
+		https) curl -fLO --progress-bar $REPO $_GITDIR ; tar -xf $_GITDIR/*.tar* ; rm -rf $_GITDIR/*.tar* ;;
+	esac
 fi
 cd $_GITDIR
-$_sc_init $_sc_arg
+case $_HTTPS_or_GIT in
+	git) git pull $_GITDIR ;;
+	https) curl -fLO --progress-bar $REPO $_GITDIR ; tar -xf $_GITDIR/*.tar* ; rm -rf $_GITDIR/*.tar* ;;
+esac
 cd $OLDPWD
 if [ ! -d $_PKGDIR ]; then
 	mkdir -pv $_PKGDIR
