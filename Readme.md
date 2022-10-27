@@ -4,6 +4,7 @@ Faerbit's original purpose was:
 „This is a linux package manager focused on simplicity, rather than feature
 completeness. This is rather for my personal education, than for producing
 something useful.”
+However, this project is starting to look like a serious package manager
 
 Fork of: https://codeberg.org/faerbit/fpkg/src/branch/master
 
@@ -20,50 +21,14 @@ Fork of: https://codeberg.org/faerbit/fpkg/src/branch/master
 make install DESTDIR=/desired/path
 ```
 
-## Usage
 ### Prerequesite
 ``` bash
 mkdir /pkg # folder for storing packages
 ```
-
-**c**reate **p**ac**k**a**g**e:
-```bash
-cd build_dir/of/foo
-cpkg make install # DESTDIR is set by cpkg
-```
-
-**q**uery **p**ac**k**a**g**e version:
-``` bash
-qpkg foo
-```
-
-**l**ist **p**ac**k**a**g**e contents:
-``` bash
-lpkg foo
-```
-
-**i**nstall **p**ac**k**a**g**e:
-``` bash
-ipkg foo
-```
-
-**r**emove **p**ac**k**a**g**e:
-``` bash
-rpkg foo
-```
-
-**u**pdate **p**ac**k**a**g**e:
-``` bash
-upkg foo 
-```
-
 ## Repositories
-You have to make your own repository, cpkg is provided to you, since i'm too lazy to actualy maintain a repo.
-
-**s**ync **p**ac**k**a**g**e:
-``` bash
-spkg foo
-```
+* To make a Repository use cpkg
+* use argument -F and create a directory
+* don't use the fpkg c arg
 
 **f**aerbit's **p**ac**k**a**g**e manager:
 ``` bash
