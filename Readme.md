@@ -1,3 +1,4 @@
+<img src="assets/logo.png" width="128"/>
 # fpkg
 
 Faerbit's original purpose was:
