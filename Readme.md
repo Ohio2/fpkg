@@ -37,3 +37,10 @@ fpkg c/q/l/i/r/u/s foo
 ```
 ### Theorotical side of criticalupdated
 Packages with the critical tag will be automatically updated, opt-in.
+### Multiple repos
+* Multiple repos are in progress,
+* will be achieved by setting $REPO to $REPO[9]
+* same goes for caches
+### Smart caching
+* Smart caching is also in progress.
+* Achieved by setting date ahead (eg. 6m) so older cache files will be removed.

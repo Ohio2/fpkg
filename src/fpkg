@@ -1,7 +1,10 @@
 #!/bin/bash
 _PKGDIR="$FPKG_ROOT/var/pkg"
 _GITDIR="$FPKG_ROOT/var/fpkg/git"
+_CACHEDIR="$FPKG_ROOT/var/fpkg/cache"
 _GIT_or_HTTPS="git"
+_HTTPS_repo_file="repo*" 
+# the standard should be decided by the user (NOTE: Repository repo file name split should be avoided, but they won't be just like linux package managers)
 conf="$FPKG_ROOT/var/fpkg/conf"
 # unsupported; use $conf instead.
 #REPO="https://github.com/Ohio2/frepo.git"
@@ -18,13 +21,13 @@ touch $_lock
 if [ ! -d $_GITDIR ]; then
 	case $_HTTPS_or_GIT in
 		git) git clone $REPO $_GITDIR ;;
-		https) curl -fLO --progress-bar $REPO $_GITDIR ; tar -xf $_GITDIR/*.tar* ; rm -rf $_GITDIR/*.tar* ;;
+		https) curl -fLO --progress-bar $REPO/$_HTTPS_repo_file $_GITDIR ; tar -xf $_GITDIR/$_HTTPS_repo_file ; mv $_GITDIR/$_HTTPS_repo_file $_CACHEDIR ; rm -rf $_GITDIR/$;
 	esac
 fi
 cd $_GITDIR
-case $_HTTPS_or_GIT in
+cacase $_HTTPS_or_GIT in
 	git) git pull $_GITDIR ;;
-	https) curl -fLO --progress-bar $REPO $_GITDIR ; tar -xf $_GITDIR/*.tar* ; rm -rf $_GITDIR/*.tar* ;;
+	https) [[ $(curl $REPO -z $_HTTPS_repo_file -o $_CACHEDIR/$_HTTPS_repo_file) == 200 ]] && curl -fLO --progress-bar $REPO $_GITDIR && tar -xf $_GITDIR/$_HTTPS_repo_file && rm -rf $_GITDIR/$_HTTPS_repo_file || echo "No updates available." ;;
 esac
 cd $OLDPWD
 if [ ! -d $_PKGDIR ]; then
