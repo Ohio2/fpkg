@@ -1,19 +1,32 @@
 #!/bin/bash
+#
 _PKGDIR="$FPKG_ROOT/var/pkg"
 _GITDIR="$FPKG_ROOT/var/fpkg/git"
 _CACHEDIR="$FPKG_ROOT/var/fpkg/cache"
 _GIT_or_HTTPS="git"
 _HTTPS_repo_file="repo*" 
-# the standard should be decided by the user (NOTE: Repository repo file name split should be avoided, but they won't be just like linux package managers)
+# the standard should be decided by the user (NOTE: Repository repo file name split should be avoided, but it won't be just like linux package managers)
 conf="$FPKG_ROOT/var/fpkg/conf"
 # unsupported; use $conf instead.
 #REPO="https://github.com/Ohio2/frepo.git"
 _usesha=yes
 _lock="/tmp/lock"
 _mlock=no
+ask=yes
 
 . $conf
-if [ -f $_lock && $_mlock = yes ]; then
+function ask() {
+	if [[ $ask = yes ]]; then
+		echo -e "You are about to $1 $2\nAre you sure? [Y/n]"
+		read $ans
+		if [[ $ans = n ]]; then
+			echo -e "User said no. Exitting."
+			exit 0
+		fi
+	fi
+	
+}
+if [ -f $_lock ] && [ $_mlock == yes ]; then
 	echo "Error 5, check if another fpkg PID is running"
 	exit 5
 fi
@@ -21,11 +34,11 @@ touch $_lock
 if [ ! -d $_GITDIR ]; then
 	case $_HTTPS_or_GIT in
 		git) git clone $REPO $_GITDIR ;;
-		https) curl -fLO --progress-bar $REPO/$_HTTPS_repo_file $_GITDIR ; tar -xf $_GITDIR/$_HTTPS_repo_file ; mv $_GITDIR/$_HTTPS_repo_file $_CACHEDIR ; rm -rf $_GITDIR/$;
+		https) curl -fLO --progress-bar $REPO/$_HTTPS_repo_file $_GITDIR ; tar -xf $_GITDIR/$_HTTPS_repo_file ; mv $_GITDIR/$_HTTPS_repo_file $_CACHEDIR ;;
 	esac
 fi
 cd $_GITDIR
-cacase $_HTTPS_or_GIT in
+case $_HTTPS_or_GIT in
 	git) git pull $_GITDIR ;;
 	https) [[ $(curl $REPO -z $_HTTPS_repo_file -o $_CACHEDIR/$_HTTPS_repo_file) == 200 ]] && curl -fLO --progress-bar $REPO $_GITDIR && tar -xf $_GITDIR/$_HTTPS_repo_file && rm -rf $_GITDIR/$_HTTPS_repo_file || echo "No updates available." ;;
 esac
@@ -36,11 +49,11 @@ fi
 
 case $1 in
 	sha) while [ ! -z "$2" ]; do [ $_usesha = yes | $_usesha = true ]; mlock=$_mlock PKGDIR=$_PKGDIR shapkg "$2"; shift; done ;;
-	i|install) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2" ; PKGDIR=$_PKGDIR ipkg "$2" || PKGDIR=$_PKGDIR espkg "$2" ; PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg < $2.d ; PKGDIR=$_PKGDIR ipkg < $2.d ; shift; done ;;
-	u|update) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR upkg "$2"; shift; done ;;
+	i|install) while [ ! -z "$2" ]; do ask "install" "$2" ;  mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2" ; PKGDIR=$_PKGDIR ipkg "$2" || PKGDIR=$_PKGDIR espkg "$2" ; PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg < $2.d ; PKGDIR=$_PKGDIR ipkg < $2.d ; shift; done ;;
+	u|update) while [ ! -z "$2" ]; do ask "update" "the system" ;  mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR upkg "$2"; shift; done ;;
 	l|list) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR lpkg "$2"; shift; done ;;
 	q|query) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR qpkg "$2"; shift; done ;;
-	r|remove) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR rpkg "$2"; shift; done ;;
+	r|remove) while [ ! -z "$2" ]; do ask "remove" "$2" ; mlock=$_mlock PKGDIR=$_PKGDIR rpkg "$2"; shift; done ;;
 	s|sync) while [ ! -z "$2" ]; do mlock=$_mlock  PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2"; shift; done ;;
 	c|create|src|compile|make|source) mlock=$_mlock PKGDIR=$_PKGDIR cpkg "$2" "$3" "$4" ;;
 	sq|syncquery) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg --query "$2" ; shift ; done ;;

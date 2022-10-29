@@ -3,8 +3,7 @@ DESTDIR ?=
 PREFIX ?=/usr
 exec_prefix ?= $(PREFIX)
 bindir ?= $(exec_prefix)/bin
-BINDIR ?= $(bindir)
-
+BINDIR ?= $(bindir) 
 
 all: help
 help:
@@ -12,7 +11,9 @@ help:
 	@echo or use \"make criticalupdated_install\" to install the fpkg openrc criticalupdate daemon for day-zero patches.
 
 install:
-	install -d -m 755 $(DESTDIR)$(BINDIR)
+	mkdir -p $(DESTDIR)$(BINDIR)
+	mkdir -p $(DESTDIR)/var/fpkg
+	install -m 755 conf/conf $(DESTDIR)/var/fpkg/conf
 	install -m 755 src/cpkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/qpkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/lpkg $(DESTDIR)$(BINDIR)
