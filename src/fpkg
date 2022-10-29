@@ -14,7 +14,10 @@ _lock="/tmp/lock"
 _mlock=no
 ask=yes
 
-. $conf
+if [[ -f $conf ]]; then
+	. $conf 
+	# may break fpkg if empty.
+fi
 function ask() {
 	if [[ $ask = yes ]]; then
 		echo -e "You are about to $1 $2\nAre you sure? [Y/n]"
