@@ -12,8 +12,9 @@ help:
 
 install:
 	mkdir -p $(DESTDIR)$(BINDIR)
-	mkdir -p $(DESTDIR)/var/fpkg
-	install -m 755 conf/conf $(DESTDIR)/var/fpkg/conf
+	chmod 755 $(DESTDIR)$(BINDIR)
+	mkdir -p $(DESTDIR)/var/fpkg/ex
+	install -m 755 conf/conf $(DESTDIR)/var/fpkg/ex/conf
 	install -m 755 src/cpkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/qpkg $(DESTDIR)$(BINDIR)
 	install -m 755 src/lpkg $(DESTDIR)$(BINDIR)

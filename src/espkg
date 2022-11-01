@@ -1,11 +1,11 @@
 #!/bin/bash
 
-$PKGDIR="$FPKG_ROOT/pkg"
-
+PKGDIR="$FPKG_ROOT/pkg"
+buildopts=""
 case $1 in
-	--query|--list) if [ -f $PKGDIR/fpkg-build-$1.sh ]; then echo "$1 from source"; fi ;;
+	--query|--list) if [ -f $PKGDIR/build-$1.sh ]; then echo "$1 from source"; fi ;;
 	*) while [ ! -z "$1" ]; do
-		$PKGDIR/fpkg-build-$1.sh
+		buildopts="$buildopts" $PKGDIR/build-$1.sh
 	shift
 	done ;;
 esac

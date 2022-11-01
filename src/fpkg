@@ -13,16 +13,45 @@ _usesha=yes
 _lock="/tmp/lock"
 _mlock=no
 ask=yes
-
+# 01.11.2022
+# --- Start merging diffrent scripts into fpkg
+#
 if [[ -f $conf ]]; then
 	. $conf 
 	# may break fpkg if empty.
 fi
+# # # # # # # # # # # # # # #
+# May go unused temporarily #
+# # # # # # # # # # # # # # #
+#function espkg(){
+# PKGDIR="$FPKG_ROOT/pkg"
+# buildopts=""
+# case $1 in 
+# 	--query|--list) if [ -f $PKGDIR/build-$1.sh ]; then echo "$1 from source"; fi ;;
+# 	 *) while [ ! -z "$1" ]; do buildopts="$buildopts" $PKGDIR/build-$1.sh shift done ;; 
+#  esac
+#}
+# # # # # # # # # # # # # # #
+# End of unused code block  #
+# # # # # # # # # # # # # # #
+function shapkg(){
+	$_shaviagit=$(openssl dgst -sha256 -r $1.sha256)
+	$_shaviafile=$(openssl sha $1)
+	if [ $_shaviagit = $_shaviafile ]
+	        echo "$_shaviagit = $_shaviafile"
+	else
+	        echo "$_shaviagit != $_shaviafile"
+	        echo "sha256 mismatch!"
+	        echo "Error 4"
+	        exit 4
+	fi
+	
+}
 function ask() {
-	if [[ $ask = yes ]]; then
+	if [[ $ask == yes ]]; then
 		echo -e "You are about to $1 $2\nAre you sure? [Y/n]"
 		read $ans
-		if [[ $ans = n ]]; then
+		if [[ $ans == n ]]; then
 			echo -e "User said no. Exitting."
 			exit 0
 		fi
@@ -52,15 +81,15 @@ fi
 
 case $1 in
 	sha) while [ ! -z "$2" ]; do [ $_usesha = yes | $_usesha = true ]; mlock=$_mlock PKGDIR=$_PKGDIR shapkg "$2"; shift; done ;;
-	i|install) while [ ! -z "$2" ]; do ask "install" "$2" ;  mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2" ; PKGDIR=$_PKGDIR ipkg "$2" || PKGDIR=$_PKGDIR espkg "$2" ; PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg < $2.d ; PKGDIR=$_PKGDIR ipkg < $2.d ; shift; done ;;
-	u|update) while [ ! -z "$2" ]; do ask "update" "the system" ;  mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR upkg "$2"; shift; done ;;
+	i|install) while [ ! -z "$2" ]; do ask "install" "$2" ;  mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2" ; PKGDIR=$_PKGDIR ipkg "$2" ; PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg < $2.d ; PKGDIR=$_PKGDIR ipkg < $2.d ; shift; done ;;
+	u|update) while [ ! -z "$2" ]; do ask "update" "the system" ;  mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR upkg "$(lpkg)"; shift; done ;;
 	l|list) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR lpkg "$2"; shift; done ;;
 	q|query) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR qpkg "$2"; shift; done ;;
 	r|remove) while [ ! -z "$2" ]; do ask "remove" "$2" ; mlock=$_mlock PKGDIR=$_PKGDIR rpkg "$2"; shift; done ;;
 	s|sync) while [ ! -z "$2" ]; do mlock=$_mlock  PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg "$2"; shift; done ;;
 	c|create|src|compile|make|source) mlock=$_mlock PKGDIR=$_PKGDIR cpkg "$2" "$3" "$4" ;;
 	sq|syncquery) while [ ! -z "$2" ]; do mlock=$_mlock PKGDIR=$_PKGDIR GITDIR=$_GITDIR spkg --query "$2" ; shift ; done ;;
-	h|help) echo -e "i|install) install package\nu|update) update package\nl|list) list package\nq|query) query package\ns|sync) copy over package file into pkgdir from the git repo (gitdir)\nc|create) make a package\nsq|syncquery) sync + query\n\n\n ERRORS:\n\n2 - probably something wrong with the scripts\n\n4 - SHA mismatch\n\n5 - if $_mlock=no then lock file exists";;
+	h|help) echo -e "i|install) install package\nu|update) update the system\nl|list) list package\nq|query) query package\ns|sync) copy over package file into pkgdir from the git repo (gitdir)\nc|create) make a package\nsq|syncquery) sync + query\n\n\n ERRORS:\n\n2 - probably something wrong with the scripts\n\n4 - SHA mismatch\n\n5 - if $_mlock=no then lock file exists";;
 	*) echo "Invalid option." ;;
 esac
 rm $_lock
