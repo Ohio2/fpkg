@@ -1,7 +1,7 @@
 #!/bin/bash
 case $1 in
 	-h) echo "sets up a testing work env, use -t to test fpkg" ;;
-	-c) t="$PWD/testing" rm -rf $t ;;
+	-c) t="$PWD/testing" rm -rf "$t"/ ;;
 	-t) t="$PWD/testing"
 	if [[ -d $t ]]; then
 		set -x

@@ -47,6 +47,53 @@ function shapkg(){
 	fi
 	
 }
+function lpkg(){
+	PKGDIR="$_PKGDIR"
+	while [ ! -z "$1" ]; do
+	        pkg_version=$(qpkg "$1")
+	        if [ $? -ne 0 ]; then
+	        then
+	                echo "$1:$pkg_version"
+	        exit 1
+	        fi
+	
+	        zstd -qcd "$PKGDIR/$1-$pkg_version.tar.zst" | tar tf -
+	shift
+	done
+}
+function rpkg(){
+	DESTDIR="${FPKG_ROOT}/"
+	RC=0
+	
+	while [ ! -z "$1" ]; do
+	
+	        files=$(lpkg "$1" | tac -)
+	        if [ $? -ne 0 ]
+	        then
+	                echo $files
+	                exit 1
+	        fi
+	
+	        cd "$DESTDIR"
+	        for file in $files
+	        do
+	                if [ -d "$file" ]
+	                then
+	                        out=$(rmdir -v "$file" 2>&1)
+	                        [ $? -eq 0 ] && echo $out
+	                elif [ -e "$file" ]
+	                then
+	                        rm -vf "$file"
+	                else
+	                        echo "File $file not found."
+	                        RC=1
+	                fi
+	        done
+	
+	        exit $RC
+	shift
+	done
+}
 function ask() {
 	if [[ $ask == yes ]]; then
 		echo -e "You are about to $1 $2\nAre you sure? [Y/n]"
