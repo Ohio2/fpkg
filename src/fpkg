@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 PKGDIR="$FPKG_ROOT/var/pkg"
-_GITDIR="$FPKG_ROOT/var/fpkg/git"
+GITDIR="$FPKG_ROOT/var/fpkg/git"
 _CACHEDIR="$FPKG_ROOT/var/fpkg/cache"
 _GIT_or_HTTPS="git"
 _HTTPS_repo_file="repo*" 
@@ -11,18 +11,20 @@ conf="$FPKG_ROOT/var/fpkg/conf"
 #REPO="https://github.com/Ohio2/frepo.git"
 _usesha=yes
 _lock="/tmp/lock"
-_mlock=no
+mlock=no
 ask=yes
 # 01.11.2022
 # --- Start merging diffrent scripts into fpkg
 #
+# 05.11.2022
+# --- Finished merging diffrent scripts into fpkg
 if [[ -f $conf ]]; then
 	. $conf 
 	# may break fpkg if empty.
 fi
 # c:espkg
 # # # # # # # # # # # # # # #
-# May go unused temporarily #
+      # May go unused temporarily #
 # # # # # # # # # # # # # # #
 #function espkg(){
 # PKGDIR="$FPKG_ROOT/pkg"
@@ -48,6 +50,23 @@ function shapkg(){
 	        exit 4
 	fi
 	
+}
+# c:qpkg
+function qpkg(){
+	while [ ! -z "$1" ]; do 
+	        version=$(find $PKGDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)
+	
+	        if [ "$version" = "" ]
+	        then
+	                echo "Package not found"
+	                exit 1
+	        else
+	                version=${version##*-}
+	                version=${version%.tar.zst}
+	                echo $version
+	        fi
+	shift
+	done
 }
 # c:lpkg
 function lpkg(){
@@ -117,25 +136,9 @@ function ipkg(){
 	done
 	
 }
-# c:qpkg
-function qpkg(){
-	while [ ! -z "$1" ]; do 
-	        version=$(find $PKGDIR -regex ".*/$1-[a-z.0-9]*.tar.zst" -type f -printf "%f\n" | sort -V | tail -n 1)
-	
-	        if [ "$version" = "" ]
-	        then
-	                echo "Package not found"
-	                exit 1
-	        else
-	                version=${version##*-}
-	                version=${version%.tar.zst}
-	                echo $version
-	        fi
-	shift
-	done
-}
 # c:spkg
 function spkg(){
+	_fpkgignore="${GITDIR}/.fpkg-ignore"
 	if [ "$#" -eq 0 ]; then
 	        echo "No arguments supplied."
 	        exit 0
@@ -181,12 +184,19 @@ function ask() {
 	if [[ $ask == yes ]]; then
 		echo -e "You are about to $1 $2\nAre you sure? [Y/n]"
 		read $ans
-		if [[ $ans == n ]]; then
+		if [[ $ans == n ]] || [[ $ans == N ]]; then
 			echo -e "User said no. Exitting."
+			rm $lock
 			exit 0
 		fi
 	fi
 	
+}
+# c:hooks
+function hooks(){
+	HOOKSPATH="${FPKG_ROOT}/var/fpkg/hooks"
+	mkdir -p $HOOKSPATH
+	RUNAS="$1" $HOOKSPATH/* # Run hooks as $1
 }
 if [ -f $_lock ] && [ $_mlock == yes ]; then
 	echo "Error 5, check if another fpkg PID is running"
