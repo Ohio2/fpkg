@@ -19,12 +19,12 @@ then
     PKGDIR="$1"
     shift
 fi
-
-if [ $# -eq 0 ]
-then
-    echo "No arguments supplied"
-    exit 1
-fi
+# tf?
+#if [ $# -eq 0 ]
+#then
+#    echo "No arguments supplied"
+#    exit 1
+#fi
 
 if [ $INFAKEROOT -eq 0 ]
 then
@@ -39,8 +39,11 @@ then
 else
     env DESTDIR=$PKGDIR INSTALL_PATH=$PKGDIR "$@"
     PKGNAME=$(basename $(pwd))
-
-    PKGDEST="${FPKG_ROOT}/pkg"
+    if [ "$PKGNAME" = "build" ]
+        then
+            PKGNAME=$(basename $(cd ..; pwd))
+        fi
+    PKGDEST="${FPKG_ROOT}/var/pkg"
 
     cd $PKGDIR
     # ls $PKGDIR | tar -c --files-from -  | zstd -3 > "$PKGDEST/$PKGNAME.tar.zst"
